@@ -7,6 +7,8 @@ Required Plugins:
 - Skript (oh! surprise)
 - SkBee (for version 1.19.4 or 1.8.8)
 - skript-reflect (for version 1.19.4 or 1.8.8)
+
+
 Command:
 /guiencoder < type > < ID > [rows] [name]
 - <<type>> : The type of inventory to be created, metadata or normal.
