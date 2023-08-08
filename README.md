@@ -1,4 +1,6 @@
 # guiencoder
+VIDEO: https://youtu.be/NTQKm2ngiqs
+
 ENGLISH:
 With this skript you will be able to generate the code of an inventory. This will naturally include all the objects inside it, with their respective attributes.
 Required Plugins:
