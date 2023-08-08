@@ -1,17 +1,14 @@
-# guiencoder
-VIDEO: https://youtu.be/NTQKm2ngiqs
+# guiencoder.sk
+guiencoder is a skript made to generate the code of an inventory in minecraft. Naturally, the code will include all the objects inside it with their respective attributes. Do you need to see how to use it in-game? You can watch the <a href="https://youtu.be/NTQKm2ngiqs">tutorial</a> to find out.
 
-ENGLISH:
-With this skript you will be able to generate the code of an inventory. This will naturally include all the objects inside it, with their respective attributes.
-Required Plugins:
+#### Required Plugins:
 - Skript (oh! surprise)
-- SkBee (for version 1.19.4 or 1.8.8)
-- skript-reflect (for version 1.19.4 or 1.8.8)
+- SkBee (Depends on the version you use)
+- skript-reflect (Depends on the version you use)
 
-
-Command:
-/guiencoder < type > < ID > [rows] [name]
-- <<type>> : The type of inventory to be created, metadata or normal.
-- <<ID>> : The identifier to use to rename the <ID>.sk, function <ID>() and other values ​​in code.
-- [rows] : The number of rows the inventory will have (1-6). This value is optional, by default it will have 1.
-- [name] : The name that the inventory will have. This value is optional, by default it will be "".
+#### Command:
+``/guiencoder <type> <ID [rows] [name]``
+- ``<type>`` The type of inventory to be created, metadata or normal.
+- ``<ID>`` The identifier to use in ``<ID>.sk``, ``function <ID>(p:player)`` and other values ​​in code.
+- ``[rows]`` The number of rows the inventory will have (1-6). This value is optional, by default it will have 1.
+- ``[name]`` The name that the inventory will have. This value is optional, by default it will be "".
