@@ -1,0 +1,50 @@
+options:
+	prefix: "&7[&3GE&7]"
+	filePath: "plugins/Skript/scripts/"
+
+command /guiencoder [<string>] [<string>] [<int=1>] [<string>]:
+	aliases: ge
+	trigger:
+		if arg-1 isn't set:
+			send formatted "%{@prefix}% &7Usage: &b/ge <ttp:&7The type of inventory that%nl%&7will be created.%nl%%nl%&7Available options:%nl% &f• metadata%nl% &f• normal><type><reset> <ttp:&7The name that the created file%nl%&7will have and the function it%nl%&7has inside.>&b<ID><reset> <ttp:&7The number of rows the inventory%nl%&7will have.%nl%&8(This option is optional)>&7<rows><reset> <ttp:&7The name that the inventory%nl%&7will have.%nl%&8(This option is optional)>&7[name]<reset>" to player
+			play sound "ANVIL_LAND" with pitch 0.6 to player
+		else if arg-1 isn't ("normal" or "metadata"):
+			send "%{@prefix}% &7Available types: &bmetadata&7/&bnormal"
+			play sound "ANVIL_LAND" with pitch 0.6 to player
+		else if arg-2 isn't set:
+			send formatted "%{@prefix}% &7Usage: &b/ge <ttp:&7The type of inventory that%nl%&7will be created.%nl%%nl%&7Available options:%nl% &f• metadata%nl% &f• normal><type><reset> <ttp:&7The name that the created file%nl%&7will have and the function it%nl%&7has inside.>&b<ID><reset> <ttp:&7The number of rows the inventory%nl%&7will have.%nl%&8(This option is optional)>&7<rows><reset> <ttp:&7The name that the inventory%nl%&7will have.%nl%&8(This option is optional)>&7[name]<reset>" to player
+			play sound "ANVIL_LAND" with pitch 0.6 to player
+		else if arg-2 doesn't match "[-A-Za-z0-9_]+":
+			send "%{@prefix}% &7The entered ID has invalid characters" to player
+			play sound "ANVIL_LAND" with pitch 0.6 to player
+		else if arg-3 isn't between 1 and 6:
+			send "%{@prefix}% &7Inventory can only have &b1-6 &7rows." to player
+			play sound "ANVIL_LAND" with pitch 0.6 to player
+		else:
+			set {guiencoder::%player's uuid%::*} to (arg-1, arg-2)
+			open chest inventory with arg-3 rows named (coloured arg-4 ? "") to player
+			play sound "CHEST_OPEN" with pitch 0.6 to player
+			send "%{@prefix}% &7Enter the items, when you finish close the inventory..." to player
+
+on inventory close:
+	{guiencoder::%player's uuid%::*} is set
+	set {_start} to now
+	encodeInventory(event-inventory, {guiencoder::%player's uuid%::*})
+	send "%{@prefix}% &fThe file &b%{guiencoder::%player's uuid%::2}%.sk &fhas been created in &7%time since {_start}% &fsuccessfully." to player
+	play sound "LEVEL_UP" with pitch 1.8 to player
+	delete {guiencoder::%player's uuid%::*}
+
+import:
+	java.io.FileWriter
+
+function encodeInventory(inv:inventory, data:strings):
+	set {_code} to ("function %{_data::2}%(p: player):%nl%    set metadata tag ""%{_data::2}%"" of {_p} to chest inventory with %{_inv}'s rows% rows named ""%{_inv}'s name%""" if {_data::1} is "metadata", else "function %{_data::2}%(p: player):%nl%    open chest inventory with %{_inv}'s rows% rows named ""%{_inv}'s name%"" to {_p}")
+	set {_save} to ("metadata tag ""%{_data::2}%"" of {_p}" if {_data::1} is "metadata", else "{_p}'s current inventory")
+	loop (all items in {_inv}):
+		add loop-slot's index to {_list::%full nbt of loop-item%::slots::*}
+	loop indices of {_list::*}:
+		set {_code} to join "%{_code}%%nl%    set slot ", ("(%{_list::%loop-value%::slots::*}%)" if (size of {_list::%loop-value%::slots::*} != 1), else "%{_list::%loop-value%::slots::*}%"), " of %{_save}% to", (" %(slot {_list::%loop-value%::slots::1} of {_inv})'s item amount% of %(slot {_list::%loop-value%::slots::1} of {_inv})'s type%" if ((slot {_list::%loop-value%::slots::1} of {_inv})'s item amount > 1), else " %(slot {_list::%loop-value%::slots::1} of {_inv})'s type%"), ((" of %(slot {_list::%loop-value%::slots::1} of {_inv})'s enchantments%" in lowercase) if (slot {_list::%loop-value%::slots::1} of {_inv}) is enchanted, else ""), (" named ""%(slot {_list::%loop-value%::slots::1} of {_inv})'s name%""" if (slot {_list::%loop-value%::slots::1} of {_inv})'s name is set else ""), (join (" with lore """, (join ((slot {_list::%loop-value%::slots::1} of {_inv})'s lore) with "%%nl%%"), """") if (slot {_list::%loop-value%::slots::1} of {_inv})'s lore is set else ""), (join (" with nbt""", join regex split (join regex split (join (split nbt of (slot {_list::%loop-value%::slots::1} of {_inv}) at """") with """""") at ",?(Enchantments\:\[[^\]]*?\]|display\:\{(Lore:\[.*\],?)?(Name:'.*')?\})") at "((?<=\{}),|,(?=\}))", """") if (join regex split (join regex split (join (split nbt of (slot {_list::%loop-value%::slots::1} of {_inv}) at """") with """""") at ",?(Enchantments\:\[[^\]]*?\]|display\:\{(Lore:\[.*\],?)?(Name:'.*')?\})") at "((?<=\{}),|,(?=\}))") is not "{}" else "")
+	set {_file} to new FileWriter("%{@filePath}%%{_data::2}%.sk")
+	{_file}.write(join (join (regex split (join (split (join (("%{_code}%%nl%    open (metadata tag ""%{_data::2}%"" of {_p}) to {_p}" if {_data::1} is "metadata", else {_code}) split at "§") with "&") at "##") with "####") at "(?<!nl)%%(?!nl)") with "%%%%"))
+	{_file}.close()
+	reload script "%{_data::2}%.sk"
