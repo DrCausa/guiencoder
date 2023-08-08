@@ -1,5 +1,6 @@
 # guiencoder.sk
-guiencoder is a skript made to generate the code of an inventory in minecraft. Naturally, the code will include all the objects inside it with their respective attributes. Do you need to see how to use it in-game? You can watch the <a href="https://youtu.be/NTQKm2ngiqs">tutorial</a> to find out.
+guiencoder is a skript made to generate the code of an inventory in minecraft. Naturally, the code will include all the objects inside it with their respective attributes.
+Do you need to see how to use it in-game? You can watch the <a href="https://youtu.be/NTQKm2ngiqs">tutorial</a> to find out.
 
 #### Required Plugins:
 - Skript (oh! surprise)
