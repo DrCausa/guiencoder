@@ -8,7 +8,7 @@ Do you need to see how to use it in-game? You can watch the <a href="https://you
 - skript-reflect (Depends on the version you use)
 
 #### Command:
-``/guiencoder <type> <ID [rows] [name]``
+``/guiencoder <type> <ID> [rows] [name]``
 - ``<type>`` The type of inventory to be created, metadata or normal.
 - ``<ID>`` The identifier to use in ``<ID>.sk``, ``function <ID>(p:player)`` and other values ​​in code.
 - ``[rows]`` The number of rows the inventory will have (1-6). This value is optional, by default it will have 1.
